@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import co.com.viveres.susy.microservicesupplier.dto.ResponseProductClientProductDto;
 
-@FeignClient(name = "microservice-product", path = "/v1/product", configuration = ClientConfiguration.class)
+@FeignClient(
+	name = "microservice-product", 
+	path = "/v1/product", 
+	configuration = ClientConfiguration.class)
 public interface IProductRestClient {
 
     @GetMapping("/{product-id}")
