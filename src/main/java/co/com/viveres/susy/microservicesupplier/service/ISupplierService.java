@@ -2,19 +2,23 @@ package co.com.viveres.susy.microservicesupplier.service;
 
 import java.util.List;
 
-import co.com.viveres.susy.microservicesupplier.dto.SupplierInputDto;
-import co.com.viveres.susy.microservicesupplier.dto.SupplierOutputDto;
+import co.com.viveres.susy.microservicecommons.dto.ProductDto;
+import co.com.viveres.susy.microservicesupplier.dto.SupplierDto;
 
 public interface ISupplierService {
 
-    public SupplierOutputDto create(SupplierInputDto request);
+	SupplierDto create(SupplierDto request);
 
-    public List<SupplierOutputDto> getAll();
+	List<SupplierDto> findAll();
 
-    public SupplierOutputDto getById(Long id);
+	SupplierDto findById(Long id);
 
-    public void update(Long id, SupplierInputDto request);
+	void update(Long id, SupplierDto request);
 
-    public void delete(Long id);
+	void delete(Long id);
+
+	void associateProductToSupplier(Long supplierId, ProductDto product);
+
+	void disassociateProductToSupplier(Long supplierId, ProductDto product);
 
 }

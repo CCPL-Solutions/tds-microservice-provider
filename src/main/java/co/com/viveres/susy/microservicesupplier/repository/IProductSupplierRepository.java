@@ -15,5 +15,7 @@ public interface IProductSupplierRepository extends JpaRepository<ProductSupplie
 	List<ProductSupplierEntity> findBySupplier(SupplierEntity supplier);
 	
 	Optional<ProductSupplierEntity> findByProductIdAndSupplier(Long productId, SupplierEntity supplier);
+	
+	void deleteByProductIdAndSupplier(Long productId, SupplierEntity supplier);
 
 }

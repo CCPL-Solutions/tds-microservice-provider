@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import co.com.viveres.susy.microservicesupplier.dto.SupplierInputDto;
-import co.com.viveres.susy.microservicesupplier.dto.SupplierOutputDto;
-import co.com.viveres.susy.microservicesupplier.dto.validation.ICreateSupplierValidation;
+import co.com.viveres.susy.microservicecommons.dto.ProductDto;
+import co.com.viveres.susy.microservicecommons.validation.AssociateProductToSupplierValidation;
+import co.com.viveres.susy.microservicesupplier.dto.SupplierDto;
 
 public interface ISupplierApi {
 
@@ -22,25 +22,39 @@ public interface ISupplierApi {
         path = "", 
         consumes = MediaType.APPLICATION_JSON_VALUE, 
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SupplierOutputDto> create(
-        @Validated(ICreateSupplierValidation.class) @RequestBody SupplierInputDto request);
+    public ResponseEntity<SupplierDto> create(
+        @Validated @RequestBody SupplierDto request);
 
     @GetMapping(
         path = "", 
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<SupplierOutputDto>> getAll();
+    public ResponseEntity<List<SupplierDto>> getAll();
 
     @GetMapping(
         path = "/{supplier-id}", 
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SupplierOutputDto> getById(@PathVariable("supplier-id") Long id);
+    public ResponseEntity<SupplierDto> getById(@PathVariable("supplier-id") Long id);
 
     @PutMapping(
         path = "/{supplier-id}", 
         consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> update(@PathVariable("supplier-id") Long id, @RequestBody SupplierInputDto request);
+    public ResponseEntity<Void> update(@PathVariable("supplier-id") Long id, @RequestBody SupplierDto request);
 
     @DeleteMapping(path = "/{supplier-id}")
     public ResponseEntity<Void> delete(@PathVariable("supplier-id") Long id);
+    
+    @PutMapping(
+        path = "/{supplier-id}/products", 
+        consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> associateProductToSupplier(
+    	@PathVariable("supplier-id") Long supplierId, 
+    	@Validated(AssociateProductToSupplierValidation.class) @RequestBody ProductDto product);
+    
+    @DeleteMapping(
+            path = "/{supplier-id}/products", 
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity<Void> disassociateProductToSupplier(
+        	@PathVariable("supplier-id") Long supplierId, 
+        	@Validated(AssociateProductToSupplierValidation.class) @RequestBody ProductDto product);    
 
 }

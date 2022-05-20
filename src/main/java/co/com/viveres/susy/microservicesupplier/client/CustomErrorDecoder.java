@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import co.com.viveres.susy.microservicecommons.entity.MessageEntity;
-import co.com.viveres.susy.microservicecommons.exceptions.GenericException;
+import co.com.viveres.susy.microservicecommons.exception.GenericException;
 import co.com.viveres.susy.microservicecommons.repository.IMessageRepository;
 import co.com.viveres.susy.microservicesupplier.util.ResponseMessages;
 import feign.Response;

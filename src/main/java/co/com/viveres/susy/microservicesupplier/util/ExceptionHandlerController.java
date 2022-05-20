@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import co.com.viveres.susy.microservicecommons.dto.ErrorDto;
 import co.com.viveres.susy.microservicecommons.entity.MessageEntity;
-import co.com.viveres.susy.microservicecommons.exceptions.GenericException;
+import co.com.viveres.susy.microservicecommons.exception.GenericException;
 import co.com.viveres.susy.microservicecommons.repository.IMessageRepository;
 import lombok.extern.log4j.Log4j2;
 
