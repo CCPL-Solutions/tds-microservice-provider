@@ -60,8 +60,8 @@ public class SupplierApiImpl implements ISupplierApi {
 	}
 	
 	@Override
-	public ResponseEntity<Void> disassociateProductToSupplier(Long supplierId, ProductDto product) {
-		this.service.disassociateProductToSupplier(supplierId, product);
+	public ResponseEntity<Void> disassociateProductToSupplier(Long supplierId, Long productId) {
+		this.service.disassociateProductToSupplier(supplierId, productId);
 		return ResponseEntity.ok().build();
 	}
 

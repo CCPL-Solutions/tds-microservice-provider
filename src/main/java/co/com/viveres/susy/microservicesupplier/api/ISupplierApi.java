@@ -50,11 +50,9 @@ public interface ISupplierApi {
     	@PathVariable("supplier-id") Long supplierId, 
     	@Validated(AssociateProductToSupplierValidation.class) @RequestBody ProductDto product);
     
-    @DeleteMapping(
-            path = "/{supplier-id}/products", 
-            consumes = MediaType.APPLICATION_JSON_VALUE)
-        public ResponseEntity<Void> disassociateProductToSupplier(
+    @DeleteMapping(path = "/{supplier-id}/products/{product-id}")
+    public ResponseEntity<Void> disassociateProductToSupplier(
         	@PathVariable("supplier-id") Long supplierId, 
-        	@Validated(AssociateProductToSupplierValidation.class) @RequestBody ProductDto product);    
+        	@PathVariable("product-id") Long productId);    
 
 }

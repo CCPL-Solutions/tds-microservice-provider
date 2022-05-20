@@ -126,20 +126,26 @@ public class SupplierServiceImpl implements ISupplierService {
 		this.productClientRest.findById(product.getId());
 		
 		SupplierEntity supplierEntity = this.findSupplierById(supplierId);
-		ProductSupplierEntity productSupplierEntity = new ProductSupplierEntity();
-		productSupplierEntity.setProductId(product.getId());
 		
-		supplierEntity.setId(supplierId);
-		supplierEntity.addProduct(productSupplierEntity);
-		this.persist(supplierEntity);
+		Optional<ProductSupplierEntity> productSupplierEntity = this.productSupplierRepository
+				.findByProductIdAndSupplier(product.getId(), supplierEntity);
+		
+		if (!productSupplierEntity.isPresent()) {
+			ProductSupplierEntity newProductSupplierEntity = new ProductSupplierEntity();
+			newProductSupplierEntity.setProductId(product.getId());
+			
+			supplierEntity.setId(supplierId);
+			supplierEntity.addProduct(newProductSupplierEntity);
+			this.persist(supplierEntity);
+		}
 	}
 	
 	@Override
-	public void disassociateProductToSupplier(Long supplierId, ProductDto product) {
-		this.productClientRest.findById(product.getId());
+	public void disassociateProductToSupplier(Long supplierId, Long productId) {
+		this.productClientRest.findById(productId);
 		SupplierEntity supplierEntity = this.findSupplierById(supplierId);
 		Optional<ProductSupplierEntity> productSupplierEntity = this.productSupplierRepository
-				.findByProductIdAndSupplier(product.getId(), supplierEntity);
+				.findByProductIdAndSupplier(productId, supplierEntity);
 		if (productSupplierEntity.isPresent()) {
 			supplierEntity.getProductSupplierList().remove(productSupplierEntity.get());
 		}

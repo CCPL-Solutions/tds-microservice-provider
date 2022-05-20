@@ -19,6 +19,6 @@ public interface ISupplierService {
 
 	void associateProductToSupplier(Long supplierId, ProductDto product);
 
-	void disassociateProductToSupplier(Long supplierId, ProductDto product);
+	void disassociateProductToSupplier(Long supplierId, Long product);
 
 }
