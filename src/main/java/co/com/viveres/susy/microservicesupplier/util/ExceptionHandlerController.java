@@ -1,12 +1,8 @@
 package co.com.viveres.susy.microservicesupplier.util;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import co.com.viveres.susy.microservicecommons.dto.NotificationDto;
+import co.com.viveres.susy.microservicecommons.exception.BusinessException;
+import co.com.viveres.susy.microservicecommons.exception.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,58 +15,66 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import co.com.viveres.susy.microservicecommons.dto.ErrorDto;
-import co.com.viveres.susy.microservicecommons.entity.MessageEntity;
-import co.com.viveres.susy.microservicecommons.exception.GenericException;
-import co.com.viveres.susy.microservicecommons.repository.IMessageRepository;
-import lombok.extern.log4j.Log4j2;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-@Log4j2
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
-  @Autowired
-	private IMessageRepository messageRepository;
+	private static final String SEVERITY_ERROR = "ERROR";
 
 	@ExceptionHandler({ Exception.class })
-	public ResponseEntity<Object> handleAll(Exception e) {
-		
-		log.error("handleAll {}", e.getMessage());
-		
-		MessageEntity message = 
-				this.messageRepository.findById("viveres-susy.generico.error-interno-servidor")
-				.orElseThrow(NoSuchElementException::new);
+	public ResponseEntity<NotificationDto> handleAll(Exception e) {
 
-		ErrorDto apiError = new ErrorDto(LocalDateTime.now(), 
-				HttpStatus.INTERNAL_SERVER_ERROR.value(),
-				HttpStatus.INTERNAL_SERVER_ERROR, 
-				message.getCodeMessage(), 
-				message.getDescripction(),
-				null);
+		HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 
-		return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+		NotificationDto notification = NotificationDto.builder()
+				.uuid(UUID.randomUUID().toString())
+				.timeStamp(LocalDateTime.now())
+				.severity(SEVERITY_ERROR)
+				.code(String.valueOf(httpStatus.value()))
+				.message(e.getMessage())
+				.build();
+
+		return new ResponseEntity<>(
+				notification,
+				new HttpHeaders(),
+				httpStatus);
 	}
 
-	@ExceptionHandler({ GenericException.class })
-	public ResponseEntity<Object> generalException(GenericException e) {
+	@ExceptionHandler({ BusinessException.class })
+	public ResponseEntity<Object> businessExceptionHandler(BusinessException e) {
 
-		ErrorDto apiError = new ErrorDto(LocalDateTime.now(), 
-				HttpStatus.BAD_REQUEST.value(), 
-				HttpStatus.BAD_REQUEST,
-				e.getMessageEntity().getCodeMessage(),
-				e.getMessageEntity().getDescripction(),
-				Arrays.asList(e.getMessageEntity().getDescripction()));
-		
-		return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+		NotificationDto notification = NotificationDto.builder()
+				.uuid(UUID.randomUUID().toString())
+				.timeStamp(LocalDateTime.now())
+				.severity(SEVERITY_ERROR)
+				.code(String.valueOf(HttpStatus.CONFLICT.value()))
+				.message(e.getMessage())
+				.build();
+
+		return ResponseEntity.badRequest().body(notification);
+	}
+
+	@ExceptionHandler({ NotFoundException.class })
+	public ResponseEntity<Object> illegalArgumentExceptionHandler(NotFoundException e) {
+
+		NotificationDto notification = NotificationDto.builder()
+				.uuid(UUID.randomUUID().toString())
+				.timeStamp(LocalDateTime.now())
+				.severity(SEVERITY_ERROR)
+				.code(String.valueOf(HttpStatus.CONFLICT.value()))
+				.message(e.getMessage())
+				.build();
+
+		return ResponseEntity.badRequest().body(notification);
 	}
 
 	@Override
-	protected ResponseEntity<Object> handleBindException(BindException e, HttpHeaders headers, 
-			HttpStatus status, WebRequest request) {
-		
-		MessageEntity message = this.messageRepository
-				.findById("viveres-susy.generico.error-validacion-campos-entrada")
-				.orElseThrow(NoSuchElementException::new);
+	protected ResponseEntity<Object> handleBindException(BindException e, HttpHeaders headers,
+														 HttpStatus status, WebRequest request) {
 
 		List<String> errors = new ArrayList<>();
 		for (FieldError error : e.getBindingResult().getFieldErrors()) {
@@ -80,25 +84,23 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 			errors.add(error.getObjectName().concat(":").concat(error.getDefaultMessage()));
 		}
 
-		ErrorDto apiError = new ErrorDto(LocalDateTime.now(), 
-				HttpStatus.BAD_REQUEST.value(),
-				HttpStatus.BAD_REQUEST,
-				message.getDescripction(),
-				message.getCodeMessage(), 
-				errors);
+		NotificationDto notification = NotificationDto.builder()
+				.uuid(UUID.randomUUID().toString())
+				.timeStamp(LocalDateTime.now())
+				.severity(SEVERITY_ERROR)
+				.code(String.valueOf(status.value()))
+				.message(e.getMessage())
+				.metadata(errors)
+				.build();
 
-		return handleExceptionInternal(e, apiError, headers, 
-				apiError.getStatus(), request);
+		return handleExceptionInternal(e, notification, headers,
+				status, request);
 	}
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(
 			MethodArgumentNotValidException e, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-				MessageEntity message = this.messageRepository
-				.findById("viveres-susy.generico.error-validacion-campos-entrada")
-				.orElseThrow(NoSuchElementException::new);
-
 		List<String> errors = new ArrayList<>();
 		for (FieldError error : e.getBindingResult().getFieldErrors()) {
 			errors.add(error.getField().concat(":").concat(error.getDefaultMessage()));
@@ -107,15 +109,17 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 			errors.add(error.getObjectName().concat(":").concat(error.getDefaultMessage()));
 		}
 
-		ErrorDto apiError = new ErrorDto(LocalDateTime.now(), 
-				HttpStatus.BAD_REQUEST.value(),
-				HttpStatus.BAD_REQUEST,
-				message.getDescripction(),
-				message.getCodeMessage(), 
-				errors);
+		NotificationDto notification = NotificationDto.builder()
+				.uuid(UUID.randomUUID().toString())
+				.timeStamp(LocalDateTime.now())
+				.severity(SEVERITY_ERROR)
+				.code(String.valueOf(status.value()))
+				.message(e.getMessage())
+				.metadata(errors)
+				.build();
 
-		return handleExceptionInternal(e, apiError, headers, 
-				apiError.getStatus(), request);
+		return handleExceptionInternal(e, notification, headers,
+				status, request);
 	}
   
 }
