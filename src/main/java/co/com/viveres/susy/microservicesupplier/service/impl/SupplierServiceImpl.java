@@ -3,6 +3,7 @@ package co.com.viveres.susy.microservicesupplier.service.impl;
 import co.com.viveres.susy.microservicecommons.dto.ProductDto;
 import co.com.viveres.susy.microservicecommons.exception.BusinessException;
 import co.com.viveres.susy.microservicecommons.exception.NotFoundException;
+import co.com.viveres.susy.microservicecommons.util.ResponseMessages;
 import co.com.viveres.susy.microservicesupplier.client.IProductRestClient;
 import co.com.viveres.susy.microservicesupplier.dto.SupplierDto;
 import co.com.viveres.susy.microservicesupplier.entity.ProductSupplierEntity;
@@ -11,7 +12,6 @@ import co.com.viveres.susy.microservicesupplier.repository.IProductSupplierRepos
 import co.com.viveres.susy.microservicesupplier.repository.ISupplierRepository;
 import co.com.viveres.susy.microservicesupplier.service.ISupplierService;
 import co.com.viveres.susy.microservicesupplier.service.mapper.IMapper;
-import co.com.viveres.susy.microservicesupplier.util.ResponseMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -75,8 +75,9 @@ public class SupplierServiceImpl implements ISupplierService {
 	private List<SupplierDto> mapOutLIstSupplierEntityToDto(List<SupplierEntity> supplierEntityList) {
 		List<SupplierDto> supplierDtoList = new ArrayList<>();
 		supplierEntityList.forEach(supplierEntity -> {
-			SupplierDto dto = this.mapper.mapOutSupplierEntityToDto(supplierEntity);
-			supplierDtoList.add(dto);
+			SupplierDto supplierDto = this.mapper.mapOutSupplierEntityToDto(supplierEntity);
+			this.setProductsToSuppliers(supplierDto, supplierEntity);
+			supplierDtoList.add(supplierDto);
 		});
 		return supplierDtoList;
 	}
@@ -84,7 +85,9 @@ public class SupplierServiceImpl implements ISupplierService {
 	@Override
 	public SupplierDto findById(Long supplierId) {
 		SupplierEntity supplierEntity = this.findSupplierById(supplierId);
-		return this.mapper.mapOutSupplierEntityToDto(supplierEntity);
+		SupplierDto supplierDto = this.mapper.mapOutSupplierEntityToDto(supplierEntity);
+		this.setProductsToSuppliers(supplierDto, supplierEntity);
+		return supplierDto;
 	}
 
 	@Override
