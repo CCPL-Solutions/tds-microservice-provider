@@ -78,7 +78,11 @@ public class SupplierServiceImpl implements ISupplierService {
 	}
 
 	private Page<SupplierDto> mapOutLIstSupplierEntityToDto(Page<SupplierEntity> supplierEntityPage) {
-		return supplierEntityPage.map(this.mapper::mapOutSupplierEntityToDto);
+		return supplierEntityPage.map(supplierEntity -> {
+			SupplierDto supplierDto = this.mapper.mapOutSupplierEntityToDto(supplierEntity);
+			this.setProductsToSuppliers(supplierDto, supplierEntity);
+			return supplierDto;
+		});
 	}
 
 	@Override
