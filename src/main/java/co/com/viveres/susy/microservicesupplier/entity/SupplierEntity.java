@@ -1,7 +1,10 @@
 package co.com.viveres.susy.microservicesupplier.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,11 +15,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
-import lombok.Data;
-
-@Data
+@AllArgsConstructor
+@Builder
 @Entity
+@Getter
+@NoArgsConstructor
+@Setter
 @Table(name = "SUPPLIER")
 public class SupplierEntity {
 
