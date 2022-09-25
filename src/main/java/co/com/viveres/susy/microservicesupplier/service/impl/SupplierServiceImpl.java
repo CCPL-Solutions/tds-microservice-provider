@@ -13,6 +13,10 @@ import co.com.viveres.susy.microservicesupplier.repository.ISupplierRepository;
 import co.com.viveres.susy.microservicesupplier.service.ISupplierService;
 import co.com.viveres.susy.microservicesupplier.service.mapper.IMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -67,19 +71,14 @@ public class SupplierServiceImpl implements ISupplierService {
 	}
 
 	@Override
-	public List<SupplierDto> findAll() {
-		List<SupplierEntity> supplierEntityList = this.supplierRepository.findAll();
-		return this.mapOutLIstSupplierEntityToDto(supplierEntityList);
+	public Page<SupplierDto> findAll(int page, int size, String sort) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+		Page<SupplierEntity> supplierEntityPage =  this.supplierRepository.findAll(pageable);
+		return this.mapOutLIstSupplierEntityToDto(supplierEntityPage);
 	}
 
-	private List<SupplierDto> mapOutLIstSupplierEntityToDto(List<SupplierEntity> supplierEntityList) {
-		List<SupplierDto> supplierDtoList = new ArrayList<>();
-		supplierEntityList.forEach(supplierEntity -> {
-			SupplierDto supplierDto = this.mapper.mapOutSupplierEntityToDto(supplierEntity);
-			this.setProductsToSuppliers(supplierDto, supplierEntity);
-			supplierDtoList.add(supplierDto);
-		});
-		return supplierDtoList;
+	private Page<SupplierDto> mapOutLIstSupplierEntityToDto(Page<SupplierEntity> supplierEntityPage) {
+		return supplierEntityPage.map(this.mapper::mapOutSupplierEntityToDto);
 	}
 
 	@Override

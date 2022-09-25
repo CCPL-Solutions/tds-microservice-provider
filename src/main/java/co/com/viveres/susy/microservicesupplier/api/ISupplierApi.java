@@ -2,6 +2,7 @@ package co.com.viveres.susy.microservicesupplier.api;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import co.com.viveres.susy.microservicecommons.dto.ProductDto;
 import co.com.viveres.susy.microservicecommons.validation.AssociateProductToSupplierValidation;
 import co.com.viveres.susy.microservicesupplier.dto.SupplierDto;
+import org.springframework.web.bind.annotation.RequestParam;
 
 public interface ISupplierApi {
 
@@ -28,7 +30,11 @@ public interface ISupplierApi {
     @GetMapping(
         path = "", 
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<SupplierDto>> getAll();
+    public ResponseEntity<Page<SupplierDto>> getAll(
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "size", defaultValue = "10") int size,
+        @RequestParam(value = "sort", defaultValue = "businessName") String sort
+    );
 
     @GetMapping(
         path = "/{supplier-id}", 

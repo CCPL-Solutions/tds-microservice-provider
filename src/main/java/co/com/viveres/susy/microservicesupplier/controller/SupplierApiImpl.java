@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,8 +29,8 @@ public class SupplierApiImpl implements ISupplierApi {
 	}
 
 	@Override
-	public ResponseEntity<List<SupplierDto>> getAll() {
-		List<SupplierDto> response = service.findAll();
+	public ResponseEntity<Page<SupplierDto>> getAll(int page, int size, String sort) {
+		Page<SupplierDto> response = service.findAll(page, size, sort);
 		return ResponseEntity.ok(response);
 	}
 
