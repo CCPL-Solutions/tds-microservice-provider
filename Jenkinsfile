@@ -39,7 +39,7 @@ pipeline {
           sh "git rev-parse --short HEAD > .git/commit-id"
           gitcommit = readFile('.git/commit-id').trim()
           docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-            def image = docker.build("plchavez98/tds-microservice-products:${gitcommit}", ".")
+            def image = docker.build("plchavez98/tds-microservice-suppliers:${gitcommit}", ".")
             image.push()
           }
         }
