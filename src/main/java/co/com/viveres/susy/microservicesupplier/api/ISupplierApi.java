@@ -59,6 +59,6 @@ public interface ISupplierApi {
     @DeleteMapping(path = "/{supplier-id}/products/{product-id}")
     public ResponseEntity<Void> disassociateProductToSupplier(
         	@PathVariable("supplier-id") Long supplierId, 
-        	@PathVariable("product-id") Long productId);    
+        	@PathVariable("product-id") Long productId);
 
 }
