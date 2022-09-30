@@ -102,9 +102,11 @@ public class SupplierServiceImpl implements ISupplierService {
 
 	@Override
 	public void delete(Long id) {
+
 		SupplierEntity supplierModel = this.findSupplierById(id);
 		this.productSupplierRepository.deleteAll(supplierModel.getProductSupplierList());
 		this.supplierRepository.delete(supplierModel);
+		
 	}
 	
 	@Override
@@ -124,6 +126,7 @@ public class SupplierServiceImpl implements ISupplierService {
 			supplierEntity.addProduct(newProductSupplierEntity);
 			this.persist(supplierEntity);
 		}
+
 	}
 	
 	@Override
