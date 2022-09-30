@@ -28,7 +28,7 @@ pipeline {
         withSonarQubeEnv(installationName: 'SonarQubeServer') {
           sh 'mvn clean package sonar:sonar'
         }
-        timeout(time: 6, unit: 'MINUTES') {
+        timeout(time: 2, unit: 'MINUTES') {
           waitForQualityGate abortPipeline: true
         }
       }
@@ -38,12 +38,23 @@ pipeline {
         script {
           sh "git rev-parse --short HEAD > .git/commit-id"
           gitcommit = readFile('.git/commit-id').trim()
+
+          def app = docker.build("plchavez98/tds-microservice-suppliers")
+
           docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-            def image = docker.build("plchavez98/tds-microservice-suppliers:${gitcommit}", ".")
-            image.push()
+            app.push("${gitcommit}")
+            app.push("latest")
           }
         }
       }
+    }
+  }
+  post {
+    success {
+      slackSend message: "Build successfully - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+    }
+    failure {
+      slackSend message: "Build failed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
     }
   }
 }
