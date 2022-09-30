@@ -124,6 +124,7 @@ public class SupplierServiceImpl implements ISupplierService {
 			supplierEntity.addProduct(newProductSupplierEntity);
 			this.persist(supplierEntity);
 		}
+		
 	}
 	
 	@Override
