@@ -2,6 +2,10 @@ pipeline {
   agent {
     label "node-awsec2-docker"
   }
+  options {
+    buildDiscarder(logRotator(artifactDaysToKeepStr:"", artifactNumToKeepStr: "5", daysToKeepStr: "", numToKeepStr: "5"))
+    disableConcurrentBuilds()
+  }
   environment {
     gitcommit = "${gitcommit}"
   }

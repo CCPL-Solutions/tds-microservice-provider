@@ -106,7 +106,7 @@ public class SupplierServiceImpl implements ISupplierService {
 		SupplierEntity supplierModel = this.findSupplierById(id);
 		this.productSupplierRepository.deleteAll(supplierModel.getProductSupplierList());
 		this.supplierRepository.delete(supplierModel);
-		
+
 	}
 	
 	@Override
