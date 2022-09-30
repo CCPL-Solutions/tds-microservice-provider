@@ -42,7 +42,7 @@ public class SupplierServiceImpl implements ISupplierService {
 		SupplierEntity supplierEntity = this.mapper.mapInSupplierDtoToEntity(supplierDto);
 		SupplierDto supplierDtoOut = this.mapper.mapOutSupplierEntityToDto(this.persist(supplierEntity));
 		this.setProductsToSuppliers(supplierDtoOut, supplierEntity);
-		return supplierDtoOut; 
+		return supplierDtoOut;
 	}
 
 	private SupplierEntity persist(SupplierEntity modelIn) {
