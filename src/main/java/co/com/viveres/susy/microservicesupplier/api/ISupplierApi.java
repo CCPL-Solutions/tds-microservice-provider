@@ -24,13 +24,13 @@ public interface ISupplierApi {
         path = "", 
         consumes = MediaType.APPLICATION_JSON_VALUE, 
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SupplierDto> create(
+    ResponseEntity<SupplierDto> create(
         @Validated @RequestBody SupplierDto request);
 
     @GetMapping(
         path = "", 
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<SupplierDto>> getAll(
+    ResponseEntity<Page<SupplierDto>> getAll(
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size,
         @RequestParam(value = "sort", defaultValue = "businessName") String sort
@@ -39,25 +39,25 @@ public interface ISupplierApi {
     @GetMapping(
         path = "/{supplier-id}", 
         produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SupplierDto> getById(@PathVariable("supplier-id") Long id);
+    ResponseEntity<SupplierDto> getById(@PathVariable("supplier-id") Long id);
 
     @PutMapping(
         path = "/{supplier-id}", 
         consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> update(@PathVariable("supplier-id") Long id, @RequestBody SupplierDto request);
+    ResponseEntity<Void> update(@PathVariable("supplier-id") Long id, @RequestBody SupplierDto request);
 
     @DeleteMapping(path = "/{supplier-id}")
-    public ResponseEntity<Void> delete(@PathVariable("supplier-id") Long id);
+    ResponseEntity<Void> delete(@PathVariable("supplier-id") Long id);
     
     @PutMapping(
         path = "/{supplier-id}/products", 
         consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> associateProductToSupplier(
+    ResponseEntity<Void> associateProductToSupplier(
     	@PathVariable("supplier-id") Long supplierId, 
     	@Validated(AssociateProductToSupplierValidation.class) @RequestBody ProductDto product);
     
     @DeleteMapping(path = "/{supplier-id}/products/{product-id}")
-    public ResponseEntity<Void> disassociateProductToSupplier(
+    ResponseEntity<Void> disassociateProductToSupplier(
         	@PathVariable("supplier-id") Long supplierId, 
         	@PathVariable("product-id") Long productId);
 
