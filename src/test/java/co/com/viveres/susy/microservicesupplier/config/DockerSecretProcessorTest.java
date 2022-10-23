@@ -1,6 +1,5 @@
 package co.com.viveres.susy.microservicesupplier.config;
 
-import co.com.viveres.susy.microservicesupplier.controller.DockerSecretProcessor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
