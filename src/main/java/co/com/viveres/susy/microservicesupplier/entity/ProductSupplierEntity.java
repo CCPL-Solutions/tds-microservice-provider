@@ -16,12 +16,12 @@ import lombok.ToString;
 
 @Data
 @Entity
-@Table(name = "PRODUCT_SUPPLIER")
+@Table(name = "\"PRODUCTS_SUPPLIERS\"")
 public class ProductSupplierEntity{
     
 	@Id
-	@SequenceGenerator(name = "SEQ_PRODUCT_SUPPLIER_ID", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_PRODUCT_SUPPLIER_ID")
+	@SequenceGenerator(name = "\"SEQ_PRODUCT_SUPPLIER_ID\"", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "\"SEQ_PRODUCT_SUPPLIER_ID\"")
     @Column(name = "ID", unique = true, nullable = false)
     private Long id;
 

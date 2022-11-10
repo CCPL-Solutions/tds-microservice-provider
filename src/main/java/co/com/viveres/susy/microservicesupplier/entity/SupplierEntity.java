@@ -24,12 +24,12 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Setter
-@Table(name = "SUPPLIER")
+@Table(name = "\"SUPPLIERS\"")
 public class SupplierEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEQ_SUPPLIER_ID", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_SUPPLIER_ID")
+	@SequenceGenerator(name = "\"SEQ_SUPPLIER_ID\"", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "\"SEQ_SUPPLIER_ID\"")
     @Column(name = "ID", unique = true, nullable = false)
     private Long id;
 
