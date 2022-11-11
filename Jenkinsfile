@@ -1,7 +1,5 @@
 pipeline {
-  agent {
-    label "node-awsec2-docker"
-  }
+  agent any
   options {
     buildDiscarder(logRotator(artifactDaysToKeepStr:"", artifactNumToKeepStr: "5", daysToKeepStr: "", numToKeepStr: "5"))
     disableConcurrentBuilds()
@@ -15,14 +13,14 @@ pipeline {
   stages {
     stage("Build") {
       steps {
-        configFileProvider([configFile(fileId: "9a904863-5c8a-4a8f-a39a-fdb501efe48c", variable: "MAVEN_SETTINGS_XML")]) {
+        configFileProvider([configFile(fileId: "fcf30dba-9aae-4f37-b7a7-c7ccb6ab9219", variable: "MAVEN_SETTINGS_XML")]) {
           sh "mvn -s $MAVEN_SETTINGS_XML -DskipTests clean package"
         }
       }
     }
     stage("Test") {
       steps {
-        configFileProvider([configFile(fileId: "9a904863-5c8a-4a8f-a39a-fdb501efe48c", variable: "MAVEN_SETTINGS_XML")]) {
+        configFileProvider([configFile(fileId: "fcf30dba-9aae-4f37-b7a7-c7ccb6ab9219", variable: "MAVEN_SETTINGS_XML")]) {
           sh "mvn -s $MAVEN_SETTINGS_XML test"
         }
       }
