@@ -131,7 +131,19 @@
 				<version>0.8.6</version>
 				<configuration>
 					<excludes>
-						<exclude>co/com/viveres/susy/microservicesupplier/entity/*</exclude>
+						<exclude>**/*Application.*</exclude>
+						<exclude>**/entity/*</exclude>
+						<exclude>**/entity/**/*</exclude>
+						<exclude>**/constant/*</exclude>
+						<exclude>**/constant/**/*</exclude>
+						<exclude>**/config/*</exclude>
+						<exclude>**/config/**/*</exclude>
+						<exclude>**/autoconfigure/*</exclude>
+						<exclude>**/autoconfigure/**/*</exclude>
+						<exclude>**/model/*</exclude>
+						<exclude>**/model/**/*</exclude>
+						<exclude>**/dto/*</exclude>
+						<exclude>**/dto/**/*</exclude>
 					</excludes>
 				</configuration>
 				<executions>
